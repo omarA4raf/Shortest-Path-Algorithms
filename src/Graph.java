@@ -74,4 +74,36 @@ public class Graph {
             this.weight = weight;
         }
     }
+
+    public boolean bellmanFord(int source, int[] costs, int[] parents) {
+        // Initialize the costs array and parents array
+        Arrays.fill(costs, Integer.MAX_VALUE);
+        Arrays.fill(parents, -1);
+        costs[source] = 0;
+
+        // Relax all edges V-1 times
+        for (int i = 0; i < V - 1; i++) {
+            for (Edge edge : edges) {
+                int u = edge.src;
+                int v = edge.dest;
+                int weight = edge.weight;
+                if (costs[u] != Integer.MAX_VALUE && costs[u] + weight < costs[v]) {
+                    costs[v] = costs[u] + weight;
+                    parents[v] = u;
+                }
+            }
+        }
+
+        // Check for negative cycles
+        for (Edge edge : edges) {
+            int u = edge.src;
+            int v = edge.dest;
+            int weight = edge.weight;
+            if (costs[u] != Integer.MAX_VALUE && costs[u] + weight < costs[v]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
